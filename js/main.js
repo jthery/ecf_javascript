@@ -22,7 +22,7 @@ var btndeletePromo = document.querySelector('#btndeletePromo');
 // ------------------
 
 function getpromotion() {
-// 1er
+// 1er on récupère l'api avec le lien, pas besoin d'indiquer de méthode, celle par défaut et "GET"
 fetch("http://api-students.popschool-lens.fr/api/promotions")
     // api récupéré par la "response" pour être transformer en JSON
     .then(response => response.json())
@@ -46,7 +46,8 @@ fetch("http://api-students.popschool-lens.fr/api/promotions")
 }
 getpromotion();
 
-// 6ième <<<<<<
+// AJOUTER LA PROMOTION
+// 6ième <<<<<< 
 btnAdd.addEventListener('click', createPromo)
 
 function createPromo() {
@@ -68,14 +69,14 @@ function createPromo() {
     // .catch()
 }
 
-
+// DELETE LA PROMOTION
 
 btndeletePromo.addEventListener('click', function () {
     let selectPromo = document.querySelector('#selectPromo')
     console.log(selectPromo.value);
     // Je demande confirmation à l'utilisateur avant suppression 
     if (confirm("Supprimer la promo :" + selectPromo.value + " ?")) {
-        // Utilsatar confirme la suppression
+        // Utilisateur confirme la suppression
         supprPromo(selectPromo.value);
     }
 })
@@ -88,6 +89,8 @@ function supprPromo(idPromo){
         getpromotion();
     })
 }
+
+// CHANGER LA PROMOTION
 
 btnchangePromo.addEventListener('click', function() {
     let selectPromo = document.querySelector('#selectPromo')
