@@ -1,19 +1,25 @@
 // on récupère l'api sur le  lien http://api-students.popschool-lens.fr/api/promotions
+// we get the API on the link http://api-students.popschool-lens.fr/api/promotions
+
 
 // 3ieme
 // afin de stocker les données JSON, nous devons déclarer un tableau vide;
+// in order to store the JSON data, we must declare an empty array;
 var listPromo = [];
 
 // 2ieme
 // déclaration de ma variable, lié à mon ID dans le html
+// declaration of my variable, linked to my ID in the html
 var myDiv = document.querySelector('#myDiv');
 
 // 5ieme
 // déclaration de mes variables, lié aux ID du html (form,input,button)
+// declaration of my variables, linked to the html IDs (form, input, button)
 var addPromo = document.querySelector('#addPromo');
 var btnAdd = document.querySelector('#btnAdd');
 
 // 7 ième A : déclaration de l' ID du selecteur
+// 7 th A: declaration of the selector ID
 var selectPromo = document.querySelector('#selectPromo');
 
 // <-------------------
@@ -23,12 +29,16 @@ var btndeletePromo = document.querySelector('#btndeletePromo');
 
 function getpromotion() {
 // 1er on récupère l'api avec le lien, pas besoin d'indiquer de méthode, celle par défaut et "GET"
+// 1st we get the API with the link, no need to indicate method, the default one and "GET"
 fetch("http://api-students.popschool-lens.fr/api/promotions")
     // api récupéré par la "response" pour être transformer en JSON
+    // API retrieved by the "response" to be transformed into JSON
     .then(response => response.json())
     //  on récupère le JSON avec le .then pour en suite le mettre dans la promo
+    // we get the JSON with the .then and then put it in the promo
     .then(function (promo) {
         // console.log(promo); permet simplement de récupérer l'intégralité de L'API, alors que ce qui nous intéresse n'est que le tableau HYDRA:MEMBER
+        // console.log (promo); simply allows to recover the entirety of the API, while what interests us is only the table HYDRA: MEMBER
         console.log(promo);
         // console.log(promo['hydra:member']);
         listPromo = promo['hydra:member'];
@@ -37,9 +47,12 @@ fetch("http://api-students.popschool-lens.fr/api/promotions")
         myDiv.innerHTML = '';
         // 4ieme
         // on va consulter avec forEach le tableau listPromo, et déclarer une fonction promotion afin de l'afficher sur notre site web
+        // 4th
+        // we will consult with forEach the table listPromo, and declare a promotion function to display it on our website
         listPromo.forEach(function (promotion) {
             myDiv.innerHTML += promotion.id + '.' + promotion.name + '<br>';
             // 7ième D : On ajoute l'ID du selecteur, afin que quand on appuie sur le boutton addPromo, puisse ajouter en même temps la promotion dans le selecteur
+            // 7th D: We add the ID of the selector, so that when we press the button addPromo, can add at the same time the promotion in the selector
             selectPromo.innerHTML += '<option value="' + promotion.id +'">' + promotion.name + '</option>';
         });
     });
@@ -47,6 +60,7 @@ fetch("http://api-students.popschool-lens.fr/api/promotions")
 getpromotion();
 
 // AJOUTER LA PROMOTION
+// ADD PROMOTION
 // 6ième <<<<<< 
 btnAdd.addEventListener('click', createPromo)
 
@@ -75,8 +89,10 @@ btndeletePromo.addEventListener('click', function () {
     let selectPromo = document.querySelector('#selectPromo')
     console.log(selectPromo.value);
     // Je demande confirmation à l'utilisateur avant suppression 
+    // I request confirmation from the user before deletion
     if (confirm("Supprimer la promo :" + selectPromo.value + " ?")) {
         // Utilisateur confirme la suppression
+        // User confirms deletion
         supprPromo(selectPromo.value);
     }
 })
@@ -96,8 +112,10 @@ btnchangePromo.addEventListener('click', function() {
     let selectPromo = document.querySelector('#selectPromo')
     console.log(selectPromo.value);
     // Je demande confirmation à l'utilisateur avant changement
+    // I request confirmation from the user before change
     if (confirm("Changer la promo :" + selectPromo.value + " ?")) {
         // Utilsateur confirme le changement
+        // User confirms the change
         modifyPromo(selectPromo.value);
     }
 })
