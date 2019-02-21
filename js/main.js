@@ -28,34 +28,34 @@ var btndeletePromo = document.querySelector('#btndeletePromo');
 // ------------------
 
 function getpromotion() {
-// 1er on récupère l'api avec le lien, pas besoin d'indiquer de méthode, celle par défaut et "GET"
-// 1st we get the API with the link, no need to indicate method, the default one and "GET"
-fetch("http://api-students.popschool-lens.fr/api/promotions")
-    // api récupéré par la "response" pour être transformer en JSON
-    // API retrieved by the "response" to be transformed into JSON
-    .then(response => response.json())
-    //  on récupère le JSON avec le .then pour en suite le mettre dans la promo
-    // we get the JSON with the .then and then put it in the promo
-    .then(function (promo) {
-        // console.log(promo); permet simplement de récupérer l'intégralité de L'API, alors que ce qui nous intéresse n'est que le tableau HYDRA:MEMBER
-        // console.log (promo); simply allows to recover the entirety of the API, while what interests us is only the table HYDRA: MEMBER
-        console.log(promo);
-        // console.log(promo['hydra:member']);
-        listPromo = promo['hydra:member'];
-        // console.log(listPromo);
-        selectPromo.innerHTML = '';
-        myDiv.innerHTML = '';
-        // 4ieme
-        // on va consulter avec forEach le tableau listPromo, et déclarer une fonction promotion afin de l'afficher sur notre site web
-        // 4th
-        // we will consult with forEach the table listPromo, and declare a promotion function to display it on our website
-        listPromo.forEach(function (promotion) {
-            myDiv.innerHTML += promotion.id + '.' + promotion.name + '<br>';
-            // 7ième D : On ajoute l'ID du selecteur, afin que quand on appuie sur le boutton addPromo, puisse ajouter en même temps la promotion dans le selecteur
-            // 7th D: We add the ID of the selector, so that when we press the button addPromo, can add at the same time the promotion in the selector
-            selectPromo.innerHTML += '<option value="' + promotion.id +'">' + promotion.name + '</option>';
+    // 1er on récupère l'api avec le lien, pas besoin d'indiquer de méthode, celle par défaut et "GET"
+    // 1st we get the API with the link, no need to indicate method, the default one and "GET"
+    fetch("http://api-students.popschool-lens.fr/api/promotions")
+        // api récupéré par la "response" pour être transformer en JSON
+        // API retrieved by the "response" to be transformed into JSON
+        .then(response => response.json())
+        //  on récupère le JSON avec le .then pour en suite le mettre dans la promo
+        // we get the JSON with the .then and then put it in the promo
+        .then(function (promo) {
+            // console.log(promo); permet simplement de récupérer l'intégralité de L'API, alors que ce qui nous intéresse n'est que le tableau HYDRA:MEMBER
+            // console.log (promo); simply allows to recover the entirety of the API, while what interests us is only the table HYDRA: MEMBER
+            // console.log(promo);
+            // console.log(promo['hydra:member']);
+            listPromo = promo['hydra:member'];
+            // console.log(listPromo);
+            selectPromo.innerHTML = '';
+            myDiv.innerHTML = '';
+            // 4ieme
+            // on va consulter avec forEach le tableau listPromo, et déclarer une fonction promotion afin de l'afficher sur notre site web
+            // 4th
+            // we will consult with forEach the table listPromo, and declare a promotion function to display it on our website
+            listPromo.forEach(function (promotion) {
+                myDiv.innerHTML += promotion.id + '.' + promotion.name + '<br>';
+                // 7ième D : On ajoute l'ID du selecteur, afin que quand on appuie sur le boutton addPromo, puisse ajouter en même temps la promotion dans le selecteur
+                // 7th D: We add the ID of the selector, so that when we press the button addPromo, can add at the same time the promotion in the selector
+                selectPromo.innerHTML += '<option value="' + promotion.id +'">' + promotion.name + '</option>';
+            });
         });
-    });
 }
 getpromotion();
 
@@ -97,18 +97,18 @@ btndeletePromo.addEventListener('click', function () {
     }
 })
 
-function supprPromo(idPromo){
-    fetch("http://api-students.popschool-lens.fr/api/promotions/" + idPromo,{
-        method: 'DELETE'
-    })
-    .then(function(response){
-        getpromotion();
-    })
+function supprPromo(idPromo) {
+    fetch("http://api-students.popschool-lens.fr/api/promotions/" + idPromo, {
+            method: 'DELETE'
+        })
+        .then(function (response) {
+            getpromotion();
+        })
 }
 
 // CHANGER LA PROMOTION
 
-btnchangePromo.addEventListener('click', function() {
+btnchangePromo.addEventListener('click', function () {
     let selectPromo = document.querySelector('#selectPromo')
     console.log(selectPromo.value);
     // Je demande confirmation à l'utilisateur avant changement
@@ -122,16 +122,40 @@ btnchangePromo.addEventListener('click', function() {
 
 function modifyPromo(idPromo) {
     fetch("http://api-students.popschool-lens.fr/api/promotions/" + idPromo, {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        method: "PUT",
-        body: JSON.stringify({
-            name: addPromo.value
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "PUT",
+            body: JSON.stringify({
+                name: addPromo.value
+            })
         })
-    })
-    .then(function(response){
-        getpromotion();
-    })
+        .then(function (response) {
+            getpromotion();
+        })
 }
+
+// add student
+var listStudent = document.querySelector("#listStudent");
+document.querySelector("#selectPromo").addEventListener("change", loadPromo);
+
+function loadPromo(event) {
+    fetch("http://api-students.popschool-lens.fr/api/promotions/" + selectPromo.value)
+        .then(r => r.json())
+        .then(
+            promo => {
+                console.log(promo)
+                promo.students.forEach(
+                    studentURL => {
+                    fetch("http://api-students.popschool-lens.fr" + studentURL)
+                        .then(r => r.json())
+                        .then(student => {
+                            var li = document.createElement("li");
+                            listStudent.appendChild(li)
+                            li.innerHTML = student.firstname + " " + student.lastname;
+                        })
+                })
+        });
+}
+
