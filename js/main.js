@@ -136,23 +136,41 @@ function modifyPromo(idPromo) {
         })
 }
 
-// add student
+// ajouter étudiant
+// ADD STUDENT
+
+// déclaration de ma liste d'étudiant
+// statement of my student list
 var listStudent = document.querySelector("#listStudent");
+
+// déclaration de mon selecteur, et ajout d'une fonction.
+// declare my selector, and add a function.
 document.querySelector("#selectPromo").addEventListener("change", loadPromo);
 
 function loadPromo(event) {
+    // on va récupère l'api promotion pour le mettre dans le selecteur
+    // we'll get the promotion API to put it in the selector
     fetch("http://api-students.popschool-lens.fr/api/promotions/" + selectPromo.value)
         .then(r => r.json())
         .then(
             promo => {
-                console.log(promo)
+                // console.log(promo)
+                //  on parcours les promotions, pour obtenir les étudiants avec un "forEach"
+                // we run promotions, to get students with a "forEach"
                 promo.students.forEach(
                     studentURL => {
+                        // get the API, and add the url of the students
                     fetch("http://api-students.popschool-lens.fr" + studentURL)
                         .then(r => r.json())
                         .then(student => {
+                            // on créer une liste
+                            // create a list
                             var li = document.createElement("li");
+                            // on ajoute la liste dans l'UL qui est égale à la variable "listStudent"
+                            // add the list in the UL which is equal to the variable "listStudent"
                             listStudent.appendChild(li)
+                            // on affiche le prénom et nom
+                            // we display the first and last name
                             li.innerHTML = student.firstname + " " + student.lastname;
                         })
                 })
